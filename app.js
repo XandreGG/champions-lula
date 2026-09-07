@@ -452,14 +452,6 @@
     var img = document.getElementById("marca-logo");
     img.src = D.logo;
     img.hidden = false;
-    // El mismo archivo hace de icono de la pestaña y del acceso directo que
-    // se guarda en la pantalla de inicio del móvil.
-    ["icon", "apple-touch-icon"].forEach(function (rel) {
-      var link = document.createElement("link");
-      link.rel = rel;
-      link.href = D.logo;
-      document.head.appendChild(link);
-    });
   }
   document.getElementById("marca-nombre").textContent = D.nombre || "Champions Lula";
   document.getElementById("marca-edicion").textContent = D.edicion || "";
