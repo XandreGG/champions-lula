@@ -1,0 +1,572 @@
+/* Champions Lula — estética inspirada en los carteles de la liga: azul noche,
+   dorado y cian, tipografía condensada en mayúsculas. Diseñado primero para
+   móvil, que es como lo verá el 90%. */
+
+:root {
+  /* Paleta tomada del logo: el indigo del balón de estrellas, el dorado de
+     los carteles y el cian de los remates. Fondo oscuro para que la tabla se
+     lea bien en el móvil, pero con el tono violáceo del logo, no azul marino. */
+  --fondo:        #070A2E;
+  --fondo-2:      #0E1352;
+  --panel:        #161C55;
+  --panel-2:      #1D2569;
+  --panel-3:      #2A3390;
+  --borde:        rgba(140, 150, 255, .20);
+  --borde-vivo:   rgba(91, 91, 214, .55);
+  --texto:        #ECEEFF;
+  --tenue:        #A3A9E0;
+  --debil:        #7178B8;
+  --cian:         #4FD2FF;
+  --azul:         #5B5BD6;
+  --dorado:       #F6C948;
+  --dorado-sua:   #FFE08A;
+  --zona-directa: #22C77E;
+  --zona-playoff: #6E74E8;
+  --zona-fuera:   #E5556B;
+  --sube:         #4ADE80;
+  --baja:         #F87171;
+  --radio:        16px;
+  --radio-sm:     10px;
+  --alto-nav:     64px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: Barlow, "Avenir Next", system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Fondo: degradado nocturno con el resplandor del estadio. */
+.cielo {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  /* El resplandor del cartel: el indigo se abre desde arriba, como en el
+     degradado radial del logo, y se apaga hacia el pie. */
+  background:
+    radial-gradient(125% 68% at 50% -6%, #5A5FD6 0%, #3D44B4 26%, #232A82 46%,
+                    transparent 64%),
+    radial-gradient(85% 55% at 85% 12%, rgba(79, 210, 255, .16) 0%, transparent 60%),
+    radial-gradient(70% 50% at 8% 28%, rgba(246, 201, 72, .07) 0%, transparent 60%),
+    linear-gradient(180deg, #101659 0%, #070A2E 48%, #04061C 100%);
+}
+
+h1, h2, h3, .cond {
+  font-family: "Saira Condensed", Barlow, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------- cabecera */
+
+.cabecera { padding: 16px 16px 10px; text-align: center; }
+
+.marca-txt h1 {
+  font-size: 29px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: .1em;
+  background: linear-gradient(180deg, var(--dorado-sua), var(--dorado) 60%, #C79A2E);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.marca-txt p {
+  margin: 5px 0 0;
+  font-size: 10.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--tenue);
+}
+
+.actualizado { margin: 8px 0 0; font-size: 11px; color: var(--debil); }
+
+.aviso-demo {
+  margin: 10px 4px 0;
+  padding: 7px 12px;
+  border: 1px solid rgba(246, 201, 72, .4);
+  border-radius: var(--radio-sm);
+  background: rgba(246, 201, 72, .08);
+  color: var(--dorado-sua);
+  font-size: 12px;
+}
+
+/* -------------------------------------------------------------------- nav */
+
+.nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2px;
+  padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+  background: rgba(6, 10, 32, .93);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--borde);
+}
+
+.nav button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--tenue);
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 7px 2px 5px;
+  border-radius: 9px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav button svg {
+  width: 17px; height: 17px;
+  fill: none; stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+.nav button[aria-current="true"] {
+  color: var(--dorado);
+  background: rgba(246, 201, 72, .10);
+}
+
+/* -------------------------------------------------------------- contenido */
+
+main {
+  padding: 4px 12px calc(var(--alto-nav) + 28px);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.seccion-titulo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 22px 2px 8px;
+}
+
+.seccion-titulo h2 { font-size: 17px; font-weight: 700; color: var(--dorado); }
+.seccion-titulo span { font-size: 11px; color: var(--tenue); white-space: nowrap; }
+
+.nota {
+  margin: 0 2px 10px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--debil);
+}
+
+.nota b { color: var(--tenue); }
+
+.tarjeta {
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  overflow: hidden;
+}
+
+.vacio { padding: 30px 20px; text-align: center; color: var(--tenue);
+         font-size: 13.5px; line-height: 1.6; }
+
+.vacio strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--texto);
+  font-family: "Saira Condensed", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-size: 15px;
+}
+
+/* ------------------------------------------------------------- escudos */
+
+.escudo {
+  width: 19px; height: 19px;
+  border-radius: 50%;
+  flex: 0 0 19px;
+  object-fit: cover;
+  background: var(--panel-2);
+  border: 1px solid var(--borde);
+}
+
+.escudo-txt {
+  display: inline-grid;
+  place-items: center;
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  color: #08102C;
+}
+
+.escudo.grande { width: 36px; height: 36px; flex: 0 0 36px; font-size: 13px; }
+
+/* --------------------------------------------------- tabla de clasificacion */
+
+.tabla-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+table.clas {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+table.clas th {
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--debil);
+  text-align: right;
+  padding: 9px 3px;
+  background: rgba(6, 10, 32, .55);
+  border-bottom: 1px solid var(--borde);
+  white-space: nowrap;
+}
+
+table.clas td {
+  font-size: 11.5px;
+  padding: 7px 3px;
+  text-align: right;
+  color: var(--tenue);
+  border-bottom: 1px solid rgba(120, 140, 220, .10);
+  white-space: nowrap;
+}
+
+table.clas tr:last-child td { border-bottom: 0; }
+
+/* Las dos primeras columnas se quedan fijas si la tabla llega a desplazarse,
+   para no perder de vista de quien es cada fila. */
+th.c-pos, td.c-pos { position: sticky; left: 0; z-index: 2;
+                     padding-left: 6px; padding-right: 2px; text-align: center; }
+th.c-eq,  td.c-eq  { position: sticky; left: 27px; z-index: 2;
+                     text-align: left; padding-left: 3px; }
+td.c-pos, td.c-eq  { background: var(--panel); }
+th.c-pos, th.c-eq  { background: #0A1030; }
+
+/* La columna del equipo se queda con todo el ancho sobrante y el nombre se
+   recorta solo cuando de verdad no cabe. */
+th.c-eq, td.c-eq { width: 100%; }
+
+.eq {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.eq-n {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--texto);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eq-aviso {
+  flex: 0 0 auto;
+  width: 14px; height: 14px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: rgba(229, 85, 107, .2);
+  color: var(--zona-fuera);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 19px; height: 19px;
+  padding: 0 3px;
+  border-radius: 6px;
+  background: var(--panel-3);
+  color: var(--texto);
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+tr.octavos   .badge { background: rgba(34, 199, 126, .22); color: #6FE9AE; }
+tr.playoff   .badge { background: rgba(110, 116, 232, .26); color: #B5B9FF; }
+tr.eliminado .badge { background: rgba(229, 85, 107, .18); color: #FF98A6; }
+tr.eliminado td     { color: var(--debil); }
+tr.eliminado .eq-n  { color: var(--tenue); }
+tr.eliminado .escudo { opacity: .6; }
+
+td.n-pt { font-family: "Saira Condensed", sans-serif; font-size: 14px;
+          font-weight: 700; color: var(--dorado); }
+td.n-ari .oro { color: var(--dorado); font-weight: 700; }
+td.n-mov { padding-left: 0; padding-right: 3px; }
+th.c-ancha, td.c-ancha { min-width: 36px; }
+
+.mov { font-size: 9.5px; font-weight: 700; }
+.mov.sube  { color: var(--sube); }
+.mov.baja  { color: var(--baja); }
+.mov.igual { color: rgba(108, 119, 168, .55); }
+
+/* --------------------------------------------------------------- leyenda */
+
+.leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 9px 4px 0;
+  font-size: 11px;
+  color: var(--debil);
+}
+
+.leyenda i {
+  display: inline-block;
+  width: 9px; height: 9px;
+  border-radius: 2px;
+  margin-right: 5px;
+  vertical-align: -1px;
+}
+
+/* --------------------------------------------------------------- portada */
+
+.portada {
+  padding: 16px 2px 4px;
+  border-bottom: 1px solid var(--borde);
+  margin-bottom: 4px;
+}
+
+.portada-eti {
+  margin: 0 0 6px;
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--cian);
+}
+
+.portada h2 {
+  font-family: "Iowan Old Style", Palatino, Georgia, serif;
+  font-size: 27px;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--texto);
+}
+
+.portada-sub {
+  margin: 8px 0 12px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--tenue);
+}
+
+/* -------------------------------------------------------------- frontera */
+
+.frontera { padding: 4px 12px; }
+
+.fr {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(120, 140, 220, .12);
+}
+
+.fr:last-child { border-bottom: 0; }
+
+.fr-t {
+  grid-column: 1;
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--texto);
+}
+
+.fr-c { grid-column: 1; font-size: 11.5px; color: var(--debil); margin-top: 2px; }
+
+.fr-p {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--dorado);
+  text-align: right;
+}
+
+.fr-p small { font-size: 10px; color: var(--debil); display: block;
+              letter-spacing: .1em; }
+
+/* ---------------------------------------------------------------- podio */
+
+.podio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+
+.podio .p {
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  padding: 12px 6px;
+  text-align: center;
+}
+
+.podio .p.vacia { background: transparent; border-style: dashed; opacity: .3; }
+
+.podio .p.oro {
+  border-color: rgba(246, 201, 72, .55);
+  background: linear-gradient(180deg, rgba(246, 201, 72, .14), var(--panel));
+}
+
+.podio .m { font-family: "Saira Condensed", sans-serif; font-size: 11px;
+            letter-spacing: .1em; color: var(--debil); }
+.podio .p.oro .m { color: var(--dorado); }
+.podio .n { font-size: 12px; font-weight: 600; margin: 6px 0 2px; line-height: 1.2; }
+.podio .v { font-family: "Saira Condensed", sans-serif; font-size: 21px;
+            font-weight: 700; color: var(--dorado); }
+.podio .escudo { margin: 0 auto 6px; display: grid; }
+
+/* ------------------------------------------------------------------ mvp */
+
+.mvp-apartados { display: grid; gap: 10px; }
+
+@media (min-width: 560px) { .mvp-apartados { grid-template-columns: 1fr 1fr; } }
+
+.apartado {
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  padding: 11px 12px;
+}
+
+.apartado h3 {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--cian);
+  letter-spacing: .07em;
+  margin-bottom: 8px;
+}
+
+.apartado .l {
+  display: grid;
+  grid-template-columns: 16px 22px 1fr auto auto;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 0;
+  font-size: 12.5px;
+}
+
+.apartado .l .m { font-family: "Saira Condensed", sans-serif; font-weight: 700;
+                  color: var(--debil); font-size: 13px; }
+.apartado .l:first-of-type .m { color: var(--dorado); }
+.apartado .l .nm { overflow: hidden; text-overflow: ellipsis;
+                   white-space: nowrap; font-weight: 500; }
+.apartado .l .vl { color: var(--debil); font-size: 11.5px; }
+.apartado .l .sm { font-family: "Saira Condensed", sans-serif;
+                   color: var(--dorado); font-weight: 700; font-size: 12.5px;
+                   min-width: 32px; text-align: right; }
+
+/* -------------------------------------------------------------- selector */
+
+.selector { display: flex; gap: 6px; overflow-x: auto; padding: 2px 2px 10px;
+            scrollbar-width: none; }
+.selector::-webkit-scrollbar { display: none; }
+
+.selector button {
+  flex: 0 0 auto;
+  appearance: none;
+  border: 1px solid var(--borde);
+  background: var(--panel);
+  color: var(--tenue);
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.selector button[aria-current="true"] {
+  background: var(--dorado);
+  border-color: var(--dorado);
+  color: #08102C;
+}
+
+/* ------------------------------------------------------------------ info */
+
+.info { padding: 14px 16px; }
+.info h3 { font-size: 13.5px; color: var(--dorado); margin: 18px 0 8px; }
+.info h3:first-child { margin-top: 0; }
+.info p, .info li { font-size: 13.5px; line-height: 1.62; color: #CBD8EF; }
+.info ol, .info ul { padding-left: 20px; margin: 6px 0; }
+.info li { margin: 3px 0; }
+.info .destacado { color: var(--cian); font-weight: 600; }
+.info b { color: var(--texto); }
+
+/* ------------------------------------------------------------------- pie */
+
+.pie {
+  text-align: center;
+  padding: 6px 16px calc(var(--alto-nav) + 20px);
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(108, 119, 168, .5);
+}
+
+/* ------------------------------------------------------------- escritorio */
+
+@media (min-width: 720px) {
+  .nav {
+    position: sticky;
+    top: 0; bottom: auto;
+    grid-template-columns: repeat(6, auto);
+    justify-content: center;
+    gap: 4px;
+    padding: 8px;
+    border-top: 0;
+    border-bottom: 1px solid var(--borde);
+  }
+  .nav button { flex-direction: row; font-size: 12px; padding: 8px 14px; }
+  .marca-txt h1 { font-size: 40px; }
+  .portada h2 { font-size: 38px; }
+  table.clas td { font-size: 13px; padding: 9px 8px; }
+  table.clas th { padding: 10px 8px; font-size: 10.5px; }
+  .eq { gap: 8px; }
+  .eq-n { font-size: 13px; }
+  .escudo { width: 22px; height: 22px; flex: 0 0 22px; }
+  main, .pie { padding-bottom: 40px; }
+}
+
+/* Logo de la liga: aparece solo si existe publico/logo.<algo>. */
+#marca-logo {
+  display: block;
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 10px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .18);
+  box-shadow: 0 8px 26px -8px rgba(0, 0, 0, .7);
+}
+
+@media (min-width: 720px) {
+  #marca-logo { width: 88px; height: 88px; }
+}
