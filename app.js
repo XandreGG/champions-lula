@@ -362,6 +362,7 @@
 
     var aportan = {};
     (p.participantes || []).forEach(function (id) { aportan[id] = true; });
+    var n = (p.participantes || []).length;
 
     /* Quien esta ahora mismo en disposicion de llevarse cada premio. Como el
        premio pasa al mejor de los 22 que aportaron, aqui se busca al primero
@@ -407,13 +408,39 @@
       "<h3>Cómo funciona</h3>" +
       "<p>La aportación fue <b>voluntaria</b>, de 10" + m + " por cabeza. " +
       "Quien no puso compite exactamente igual, pero fuera del bote.</p>" +
-      "<p>Si un premio lo gana alguien que <b>no aportó</b>, ese premio " +
-      "<b>pasa al mejor clasificado de entre los " +
-      (p.participantes || []).length + "</b>. El dinero no se devuelve: " +
-      "siempre se reparte.</p>" +
+      "<p>Los tres premios se reparten <b>siempre entre los " + n +
+      "</b> que pusieron. El dinero nunca se devuelve.</p>" +
+
+      "<h3>Campeón y subcampeón</h3>" +
+      "<p>Se hace una lista solo con los " + n + ", ordenada así:</p>" +
+      "<ol>" +
+      "<li><b>Quién llegó más lejos en la eliminatoria.</b> El campeón por " +
+      "delante del subcampeón, el subcampeón por delante de los " +
+      "semifinalistas, y así hacia abajo.</li>" +
+      "<li>Si dos cayeron en la <b>misma ronda</b>, el que mejor quedó en la " +
+      "fase clasificatoria.</li>" +
+      "</ol>" +
+      "<p>El primero de esa lista cobra los <b>150" + m + "</b>. El segundo, " +
+      "los <b>50" + m + "</b>.</p>" +
+      "<p>En la práctica, esto es lo que significa:</p>" +
+      "<ul>" +
+      "<li><b>Los dos finalistas pusieron:</b> todo normal. El campeón cobra " +
+      "150" + m + " y el subcampeón 50" + m + ".</li>" +
+      "<li><b>Solo uno de los finalistas puso:</b> ese cobra los 150" + m +
+      ", gane o pierda la final, porque es quien más lejos llegó de los " + n +
+      ". Los 50" + m + " pasan al siguiente de la lista.</li>" +
+      "<li><b>Ninguno de los dos finalistas puso:</b> los dos premios van a " +
+      "los dos primeros de la lista, es decir a los dos del bote que más " +
+      "lejos llegaron.</li>" +
+      "</ul>" +
+
+      "<h3>MVP</h3>" +
+      "<p>Este es más sencillo: lo cobra el <b>mejor clasificado del MVP de " +
+      "entre los " + n + "</b>. Si el primero del MVP no puso, el premio pasa " +
+      "al siguiente que sí lo hizo.</p>" +
       "<h3>Quién compite por el dinero</h3>" +
-      "<p>" + (p.participantes || []).length + " de los " +
-      (D.participantes || []).length + " participantes.</p>" +
+      "<p>" + n + " de los " + (D.participantes || []).length +
+      " participantes.</p>" +
       '<div class="premiados">' + gente + "</div>";
   }
 
