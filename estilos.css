@@ -39,7 +39,9 @@ html, body {
   color: var(--texto);
   font-family: Barlow, "Avenir Next", system-ui, -apple-system, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  /* Nada de `overflow-x: hidden` aqui: convierte el body en contenedor de
+     scroll y rompe el `position: sticky` de la cabecera. Las tablas ya se
+     controlan solas con su propio contenedor. */
 }
 
 /* Fondo: degradado nocturno con el resplandor del estadio. */
@@ -62,6 +64,20 @@ h1, h2, h3, .cond {
   text-transform: uppercase;
   letter-spacing: .06em;
   margin: 0;
+}
+
+/* ------------------------------------------------------------ bloque fijo */
+
+/* La marca y las pestañas no se van al hacer scroll: en el movil, con tablas
+   de 36 filas, perder la navegacion obliga a subir del todo para cambiar de
+   seccion. El fondo es opaco para que las filas no se transparenten debajo. */
+.fijo {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: rgba(6, 10, 32, .96);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--borde);
 }
 
 /* ---------------------------------------------------------------- cabecera */
@@ -104,16 +120,10 @@ h1, h2, h3, .cond {
 /* Arriba y pegada al borde superior: asi no tapa el final de las tablas
    largas y queda justo debajo de la marca. */
 .nav {
-  position: sticky;
-  top: 0;
-  z-index: 20;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 2px;
-  padding: 5px 4px;
-  background: rgba(6, 10, 32, .95);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--borde);
+  padding: 0 4px 5px;
 }
 
 .nav button {
@@ -270,8 +280,11 @@ td.c-pos, td.c-eq  { background: var(--panel); }
 th.c-pos, th.c-eq  { background: #0A1030; }
 
 /* La columna del equipo se queda con todo el ancho sobrante y el nombre se
-   recorta solo cuando de verdad no cabe. */
-th.c-eq, td.c-eq { width: 100%; }
+   recorta cuando no cabe. El `max-width: 0` junto al `width: 100%` es el
+   truco para que una celda de tabla pueda encogerse por debajo del ancho de
+   su texto; sin el, el nombre mas largo de los 36 decide el ancho de toda la
+   tabla y la saca de la pantalla. */
+th.c-eq, td.c-eq { width: 100%; max-width: 0; }
 
 .eq {
   display: flex;
@@ -592,4 +605,25 @@ th.c-ancha, td.c-ancha { min-width: 36px; }
   .eq-n { font-size: 11px; }
   .badge { min-width: 17px; height: 17px; font-size: 11px; }
   th.c-eq, td.c-eq { left: 25px; }
+}
+
+
+/* Las columnas numéricas llevan un ancho mínimo propio. Sin esto, la columna
+   del equipo (que se queda con todo el sobrante) las estruja hasta el ancho
+   exacto del texto, y un valor de tres cifras como 111 acaba cortándose. */
+table.clas th:not(.c-pos):not(.c-eq),
+table.clas td:not(.c-pos):not(.c-eq) { min-width: 25px; }
+
+/* El :not() de la regla de arriba pesa mucho en especificidad, asi que estas
+   tienen que igualarlo para poder pisarla. */
+table.clas th.n-pt:not(.c-eq),  table.clas td.n-pt:not(.c-eq)  { min-width: 34px; }
+table.clas th.n-mov:not(.c-eq), table.clas td.n-mov:not(.c-eq) { min-width: 30px; }
+table.clas th.c-ancha:not(.c-eq), table.clas td.c-ancha:not(.c-eq) { min-width: 40px; }
+
+@media (max-width: 360px) {
+  table.clas th:not(.c-pos):not(.c-eq),
+  table.clas td:not(.c-pos):not(.c-eq) { min-width: 22px; }
+  table.clas th.n-pt:not(.c-eq),  table.clas td.n-pt:not(.c-eq)  { min-width: 31px; }
+  table.clas th.n-mov:not(.c-eq), table.clas td.n-mov:not(.c-eq) { min-width: 27px; }
+  table.clas th.c-ancha:not(.c-eq), table.clas td.c-ancha:not(.c-eq) { min-width: 36px; }
 }

@@ -86,8 +86,10 @@
   function tabla(columnas, filas) {
     var cab = '<th class="c-pos">#</th><th class="c-eq">Participante</th>' +
       columnas.map(function (c) {
-        return '<th class="' + (c.ancha ? "c-ancha" : "") + '" title="' +
-          esc(c.ayuda || c.eti) + '">' + esc(c.eti) + "</th>";
+        // La cabecera lleva las mismas clases que sus celdas: asi el ancho
+        // minimo se aplica a la columna entera y no solo a las filas.
+        return '<th class="' + (c.clase || "") + (c.ancha ? " c-ancha" : "") +
+          '" title="' + esc(c.ayuda || c.eti) + '">' + esc(c.eti) + "</th>";
       }).join("");
 
     var cuerpo = filas.map(function (f) {
@@ -131,6 +133,11 @@
             valor: function (f) { return f.asistencias; } }
   };
 
+  // Las mismas columnas en el resumen y en la general, para que nadie tenga
+  // que aprenderse dos tablas distintas.
+  var COLUMNAS_GENERAL = [COL.mov, COL.pt, COL.jg, COL.med, COL.ari,
+                          COL.gf, COL.as];
+
   function leyenda() {
     return '<div class="leyenda">' +
       '<span><i style="background:var(--zona-directa)"></i>1-8 Octavos</span>' +
@@ -158,8 +165,7 @@
     return titulo("Clasificación general",
       "Jornada " + D.jornadas.length + " de " + D.reglas.jornadas_fase,
       "Desempates: " + DESEMPATE_GENERAL + ".") +
-      tabla([COL.mov, COL.pt, COL.jg, COL.med, COL.ari, COL.gf, COL.as],
-            D.general.map(conAviso)) +
+      tabla(COLUMNAS_GENERAL, D.general.map(conAviso)) +
       leyenda();
   }
 
@@ -300,8 +306,7 @@
       podioHTML(ultima.filas.slice(0, 3), function (f) { return f.puntos; }) +
 
       titulo("Clasificación general", "cabeza de la tabla") +
-      tabla([COL.mov, COL.pt, COL.jg, COL.med],
-            D.general.slice(0, 10).map(conAviso)) +
+      tabla(COLUMNAS_GENERAL, D.general.slice(0, 10).map(conAviso)) +
       leyenda() +
       '<p class="nota">Los 36 equipos, con todas las estadísticas, en la ' +
       'pestaña <b>General</b>.</p>' +
