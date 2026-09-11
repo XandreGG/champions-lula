@@ -333,9 +333,28 @@ tr.eliminado td     { color: var(--debil); }
 tr.eliminado .eq-n  { color: var(--tenue); }
 tr.eliminado .escudo { opacity: .6; }
 
-td.n-pt { font-family: "Saira Condensed", sans-serif; font-size: 14px;
-          font-weight: 700; color: var(--dorado); }
-td.n-ari .oro { color: var(--dorado); font-weight: 700; }
+/* Ojo con la especificidad en este bloque: la regla base `table.clas td` es
+   (0,0,1,2), asi que cualquier excepcion tiene que igualarla o superarla o no
+   se aplica el color. Por eso todas van con el prefijo completo. */
+
+/* Los puntos pesan mas que el resto de estadisticas, pero sin color propio:
+   el dorado queda reservado para senalar el criterio que desempata. */
+table.clas td.n-pt {
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--texto);
+}
+
+/* La estadistica que le separa del de abajo. El segundo selector hace falta
+   para que tambien se vea en las filas de los eliminados, que van atenuadas. */
+table.clas td.desempata,
+table.clas tr.eliminado td.desempata {
+  color: var(--dorado);
+  font-weight: 700;
+}
+
+.nota .oro, b.oro { color: var(--dorado); font-weight: 600; }
 td.n-mov { padding-left: 0; padding-right: 3px; }
 th.c-ancha, td.c-ancha { min-width: 36px; }
 

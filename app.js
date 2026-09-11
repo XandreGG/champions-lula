@@ -22,6 +22,8 @@
   // bajo el titulo para que nadie tenga que preguntar por que va detras.
   var DESEMPATE_GENERAL =
     "puntos → jornadas ganadas → media de posición → ariete → goles → asistencias";
+  var PISTA_DORADO =
+    "En <b class='oro'>dorado</b>, la estadística que le separa del siguiente.";
   var DESEMPATE_JORNADA =
     "puntos → ariete → goles → asistencias → posición previa en la general";
 
@@ -94,7 +96,9 @@
 
     var cuerpo = filas.map(function (f) {
       var celdas = columnas.map(function (c) {
-        return '<td class="' + (c.clase || "") + '">' + c.valor(f) + "</td>";
+        var marca = c.criterio && c.criterio === f.desempate ? " desempata" : "";
+        return '<td class="' + (c.clase || "") + marca + '">' +
+          c.valor(f) + "</td>";
       }).join("");
       return '<tr class="' + (f.estado || "") + (f.destacada ? " destacada" : "") +
         '"><td class="c-pos"><span class="badge">' + (f.badge || f.posicion) +
@@ -110,26 +114,29 @@
       "</tbody></table></div></div>";
   }
 
+  /* `criterio` empareja cada columna con el desempate que calcula el motor:
+     la estadistica que separa a ese participante del de abajo se pinta en
+     dorado, para que se vea de un vistazo por que va por delante. */
   var COL = {
     mov:  { eti: "+/−", ayuda: "Puestos ganados o perdidos en la última jornada",
             clase: "n-mov", valor: function (f) { return flecha(f.movimiento); } },
     pt:   { eti: "PT", ayuda: "Puntos totales", clase: "n-pt",
-            valor: function (f) { return f.puntos; } },
+            criterio: "puntos", valor: function (f) { return f.puntos; } },
     pts:  { eti: "PTS", ayuda: "Puntos de la jornada", clase: "n-pt",
-            valor: function (f) { return f.puntos; } },
-    jg:   { eti: "JG", ayuda: "Jornadas ganadas",
+            criterio: "puntos", valor: function (f) { return f.puntos; } },
+    jg:   { eti: "JG", ayuda: "Jornadas ganadas", criterio: "jornadas_ganadas",
             valor: function (f) { return f.jornadas_ganadas; } },
     med:  { eti: "MED", ayuda: "Media de posición por jornada", ancha: true,
+            criterio: "media_posicion",
             valor: function (f) { return media(f.media_posicion); } },
     ari:  { eti: "ARI", ayuda: "Puntos de ariete (+3 por jornada acertada)",
-            clase: "n-ari",
+            criterio: "ariete",
             valor: function (f) {
-              return f.puntos_ariete
-                ? '<b class="oro">' + f.puntos_ariete + "</b>" : "—";
+              return f.puntos_ariete ? f.puntos_ariete : "—";
             } },
-    gf:   { eti: "GF", ayuda: "Goles",
+    gf:   { eti: "GF", ayuda: "Goles", criterio: "goles",
             valor: function (f) { return f.goles; } },
-    as:   { eti: "AS", ayuda: "Asistencias",
+    as:   { eti: "AS", ayuda: "Asistencias", criterio: "asistencias",
             valor: function (f) { return f.asistencias; } }
   };
 
@@ -164,7 +171,7 @@
     }
     return titulo("Clasificación general",
       "Jornada " + D.jornadas.length + " de " + D.reglas.jornadas_fase,
-      "Desempates: " + DESEMPATE_GENERAL + ".") +
+      "Desempates: " + DESEMPATE_GENERAL + ". " + PISTA_DORADO) +
       tabla(COLUMNAS_GENERAL, D.general.map(conAviso)) +
       leyenda();
   }
@@ -198,7 +205,7 @@
     });
 
     return titulo("Clasificación por jornada", j.nombre,
-      "Desempates: " + DESEMPATE_JORNADA + ".") +
+      "Desempates: " + DESEMPATE_JORNADA + ". " + PISTA_DORADO) +
       '<div class="selector">' + botones + "</div>" +
       tabla([COL.pts, COL.ari, COL.gf, COL.as], filas);
   }
@@ -224,8 +231,10 @@
       titulo("Clasificación del MVP") +
       tabla([
         { eti: "MVP", ayuda: "Puntos del MVP", clase: "n-pt",
+          criterio: "total",
           valor: function (f) { return f.total.toFixed(2); } },
         { eti: "GEN", ayuda: "Posición en la clasificación general",
+          criterio: "posicion_general",
           valor: function (f) { return f.posicion_general; } }
       ], top);
   }
