@@ -220,9 +220,7 @@
         { eti: "MVP", ayuda: "Puntos del MVP", clase: "n-pt",
           valor: function (f) { return f.total.toFixed(2); } },
         { eti: "GEN", ayuda: "Posición en la clasificación general",
-          valor: function (f) { return f.posicion_general; } },
-        { eti: "VIVO", ayuda: "Sigue en la competición",
-          valor: function (f) { return f.progreso > 0 ? "sí" : "no"; } }
+          valor: function (f) { return f.posicion_general; } }
       ], top);
   }
 
@@ -253,26 +251,25 @@
 
   // -------------------------------------------------------------- resumen
 
-  /* La frontera: los dos cortes que de verdad importan cada semana, el que
-     separa octavos del play-off y el que separa el play-off de la eliminacion. */
+  /* La frontera: quien ocupa ahora mismo los dos puestos que deciden la
+     temporada, el ultimo que pasa directo a octavos y el ultimo que se salva
+     de la eliminacion. */
   function fronteraHTML() {
-    var g = D.general, co = D.reglas.corte_octavos, cp = D.reglas.corte_playoff;
     var lineas = [];
 
-    function corte(iAlto, etiqueta) {
-      var alto = g[iAlto - 1], bajo = g[iAlto];
-      if (!alto || !bajo) return;
+    function corte(puesto, etiqueta) {
+      var f = D.general[puesto - 1];
+      if (!f) return;
       lineas.push('<div class="fr">' +
         '<div class="fr-t">' + esc(etiqueta) + "</div>" +
-        '<div class="fr-c">' + esc(nombre(alto.participante)) + " " +
-        iAlto + "º · " + esc(nombre(bajo.participante)) + " " + (iAlto + 1) +
-        "º</div>" +
-        '<div class="fr-p">' + (alto.puntos - bajo.puntos) + "<small>pts</small>" +
-        "</div></div>");
+        '<div class="fr-e">' + escudo(f.participante) +
+        "<span>" + esc(nombre(f.participante)) + "</span>" +
+        "<small>" + puesto + "º</small></div>" +
+        '<div class="fr-p">' + f.puntos + "<small>pts</small></div></div>");
     }
 
-    corte(co, "Última plaza directa a octavos");
-    corte(cp, "Corte de eliminación");
+    corte(D.reglas.corte_octavos, "Última plaza directa a octavos");
+    corte(D.reglas.corte_playoff, "Corte de eliminación");
     return lineas.length
       ? '<div class="tarjeta frontera">' + lineas.join("") + "</div>" : "";
   }
@@ -296,23 +293,11 @@
     var mvp = (D.mvp && D.mvp.tabla || []).filter(function (f) {
       return f.total > 0;
     });
-    var lider = D.general[0];
-
-    return '<div class="portada">' +
-      '<p class="portada-eti">Jornada ' + D.jornadas.length + " de " +
-      D.reglas.jornadas_fase + "</p>" +
-      "<h2>" + esc(nombre(lider.participante)) + " manda con " +
-      lider.puntos + " puntos</h2>" +
-      '<p class="portada-sub">' +
-      esc(nombre(ultima.filas[0].participante)) + " firmó la mejor " +
-      "actuación de la jornada con " + ultima.filas[0].puntos + " puntos." +
-      "</p></div>" +
+    return '<p class="jornada-actual">Jornada ' + D.jornadas.length +
+      " de " + D.reglas.jornadas_fase + "</p>" +
 
       titulo("Podio de la jornada", ultima.nombre) +
       podioHTML(ultima.filas.slice(0, 3), function (f) { return f.puntos; }) +
-
-      titulo("La frontera", "lo que se juega cada semana") +
-      fronteraHTML() +
 
       titulo("Clasificación general", "cabeza de la tabla") +
       tabla([COL.mov, COL.pt, COL.jg, COL.med],
@@ -323,7 +308,10 @@
 
       (mvp.length ? titulo("MVP", "máximo 8,00") +
         podioHTML(mvp.slice(0, 3), function (f) { return f.total.toFixed(2); })
-        : "");
+        : "") +
+
+      titulo("La frontera", "lo que se juega cada semana") +
+      fronteraHTML();
   }
 
   // --------------------------------------------------------------- cuadro
@@ -348,6 +336,9 @@
   function pintaInfo() {
     return titulo("Reglas de la Champions Lula", D.edicion) +
       '<div class="tarjeta"><div class="info">' +
+      '<p class="nota" style="margin:0 0 14px">' + esc(D.edicion) +
+      (D.actualizado ? " · actualizado el " + esc(D.actualizado) : "") +
+      "</p>" +
       "<p>Formato Biwenger sin mercado: gana quien mejor alineación haga cada " +
       "jornada. Somos <span class='destacado'>36 participantes</span>, tantos " +
       "como en la Champions.</p>" +
@@ -455,11 +446,8 @@
     img.hidden = false;
   }
   document.getElementById("marca-nombre").textContent = D.nombre || "Champions Lula";
-  document.getElementById("marca-edicion").textContent = D.edicion || "";
   document.getElementById("pie-txt").textContent =
     (D.nombre || "") + " · " + (D.edicion || "");
-  document.getElementById("actualizado").textContent =
-    D.actualizado ? "Actualizado el " + D.actualizado : "";
 
   if (D.demo) {
     document.querySelector(".cabecera").insertAdjacentHTML("beforeend",

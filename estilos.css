@@ -66,25 +66,25 @@ h1, h2, h3, .cond {
 
 /* ---------------------------------------------------------------- cabecera */
 
-.cabecera { padding: 16px 16px 10px; text-align: center; }
+/* Compacta a proposito: en el movil el contenido tiene que empezar arriba,
+   no despues de media pantalla de marca. */
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 9px 16px 7px;
+}
 
-.marca-txt h1 {
-  font-size: 29px;
+.cabecera h1 {
+  font-size: 19px;
   font-weight: 700;
   line-height: 1;
-  letter-spacing: .1em;
+  letter-spacing: .09em;
   background: linear-gradient(180deg, var(--dorado-sua), var(--dorado) 60%, #C79A2E);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-}
-
-.marca-txt p {
-  margin: 5px 0 0;
-  font-size: 10.5px;
-  letter-spacing: .28em;
-  text-transform: uppercase;
-  color: var(--tenue);
 }
 
 .actualizado { margin: 8px 0 0; font-size: 11px; color: var(--debil); }
@@ -101,17 +101,19 @@ h1, h2, h3, .cond {
 
 /* -------------------------------------------------------------------- nav */
 
+/* Arriba y pegada al borde superior: asi no tapa el final de las tablas
+   largas y queda justo debajo de la marca. */
 .nav {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
+  position: sticky;
+  top: 0;
   z-index: 20;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 2px;
-  padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
-  background: rgba(6, 10, 32, .93);
+  padding: 5px 4px;
+  background: rgba(6, 10, 32, .95);
   backdrop-filter: blur(14px);
-  border-top: 1px solid var(--borde);
+  border-bottom: 1px solid var(--borde);
 }
 
 .nav button {
@@ -147,7 +149,7 @@ h1, h2, h3, .cond {
 /* -------------------------------------------------------------- contenido */
 
 main {
-  padding: 4px 12px calc(var(--alto-nav) + 28px);
+  padding: 6px 12px 28px;
   max-width: 900px;
   margin: 0 auto;
 }
@@ -252,9 +254,18 @@ table.clas tr:last-child td { border-bottom: 0; }
 /* Las dos primeras columnas se quedan fijas si la tabla llega a desplazarse,
    para no perder de vista de quien es cada fila. */
 th.c-pos, td.c-pos { position: sticky; left: 0; z-index: 2;
-                     padding-left: 6px; padding-right: 2px; text-align: center; }
+                     padding-left: 6px; padding-right: 2px; }
 th.c-eq,  td.c-eq  { position: sticky; left: 27px; z-index: 2;
-                     text-align: left; padding-left: 3px; }
+                     padding-left: 3px; }
+
+/* Con el selector completo, si no gana la regla general de `table.clas th`
+   por especificidad y el titulo se va a la derecha. */
+table.clas th.c-pos, table.clas td.c-pos { text-align: center; }
+table.clas th.c-eq,  table.clas td.c-eq  { text-align: left; }
+
+/* El titulo arranca donde arranca el nombre del equipo, no donde arranca la
+   celda: por delante va el escudo (19px) y su separacion (6px). */
+table.clas th.c-eq { padding-left: 28px; }
 td.c-pos, td.c-eq  { background: var(--panel); }
 th.c-pos, th.c-eq  { background: #0A1030; }
 
@@ -341,36 +352,14 @@ th.c-ancha, td.c-ancha { min-width: 36px; }
 
 /* --------------------------------------------------------------- portada */
 
-.portada {
-  padding: 16px 2px 4px;
-  border-bottom: 1px solid var(--borde);
-  margin-bottom: 4px;
-}
-
-.portada-eti {
-  margin: 0 0 6px;
+.jornada-actual {
+  margin: 12px 2px 2px;
   font-family: "Saira Condensed", sans-serif;
-  font-size: 10.5px;
-  letter-spacing: .18em;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--cian);
-}
-
-.portada h2 {
-  font-family: "Iowan Old Style", Palatino, Georgia, serif;
-  font-size: 27px;
-  font-weight: 600;
-  line-height: 1.12;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--texto);
-}
-
-.portada-sub {
-  margin: 8px 0 12px;
-  font-size: 13.5px;
-  line-height: 1.55;
-  color: var(--tenue);
 }
 
 /* -------------------------------------------------------------- frontera */
@@ -398,7 +387,30 @@ th.c-ancha, td.c-ancha { min-width: 36px; }
   color: var(--texto);
 }
 
-.fr-c { grid-column: 1; font-size: 11.5px; color: var(--debil); margin-top: 2px; }
+.fr-e {
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 5px;
+  min-width: 0;
+}
+
+.fr-e span {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--texto);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fr-e small {
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 11px;
+  color: var(--debil);
+  flex: 0 0 auto;
+}
 
 .fr-p {
   grid-column: 2;
@@ -523,7 +535,7 @@ th.c-ancha, td.c-ancha { min-width: 36px; }
 
 .pie {
   text-align: center;
-  padding: 6px 16px calc(var(--alto-nav) + 20px);
+  padding: 10px 16px 24px;
   font-family: "Saira Condensed", sans-serif;
   font-size: 10px;
   letter-spacing: .22em;
@@ -535,32 +547,28 @@ th.c-ancha, td.c-ancha { min-width: 36px; }
 
 @media (min-width: 720px) {
   .nav {
-    position: sticky;
-    top: 0; bottom: auto;
     grid-template-columns: repeat(6, auto);
     justify-content: center;
     gap: 4px;
     padding: 8px;
-    border-top: 0;
-    border-bottom: 1px solid var(--borde);
   }
   .nav button { flex-direction: row; font-size: 12px; padding: 8px 14px; }
-  .marca-txt h1 { font-size: 40px; }
-  .portada h2 { font-size: 38px; }
-  table.clas td { font-size: 13px; padding: 9px 8px; }
+  .cabecera h1 { font-size: 27px; }
+    table.clas td { font-size: 13px; padding: 9px 8px; }
   table.clas th { padding: 10px 8px; font-size: 10.5px; }
   .eq { gap: 8px; }
   .eq-n { font-size: 13px; }
   .escudo { width: 22px; height: 22px; flex: 0 0 22px; }
-  main, .pie { padding-bottom: 40px; }
+  main { padding-bottom: 40px; }
 }
 
 /* Logo de la liga: aparece solo si existe publico/logo.<algo>. */
 #marca-logo {
   display: block;
-  width: 68px;
-  height: 68px;
-  margin: 0 auto 10px;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  margin: 0;
   object-fit: cover;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, .18);
@@ -568,5 +576,20 @@ th.c-ancha, td.c-ancha { min-width: 36px; }
 }
 
 @media (min-width: 720px) {
-  #marca-logo { width: 88px; height: 88px; }
+  #marca-logo { width: 40px; height: 40px; flex: 0 0 40px; }
+}
+
+/* En pantallas muy estrechas la tabla se aprieta un punto más antes de
+   permitirse desplazamiento lateral. */
+@media (max-width: 360px) {
+  table.clas td { font-size: 11px; padding: 7px 2px; }
+  table.clas th { font-size: 9px; padding: 9px 2px; letter-spacing: .03em; }
+  td.n-pt { font-size: 13px; }
+  th.c-ancha, td.c-ancha { min-width: 32px; }
+  table.clas th.c-eq { padding-left: 25px; }
+  .escudo { width: 17px; height: 17px; flex: 0 0 17px; font-size: 8px; }
+  .eq { gap: 5px; }
+  .eq-n { font-size: 11px; }
+  .badge { min-width: 17px; height: 17px; font-size: 11px; }
+  th.c-eq, td.c-eq { left: 25px; }
 }
