@@ -363,25 +363,30 @@
     var aportan = {};
     (p.participantes || []).forEach(function (id) { aportan[id] = true; });
 
-    /* Quien esta ahora mismo en disposicion de llevarse cada premio. El
-       campeon y el subcampeon no existen hasta que se juegue la final, asi
+    /* Quien esta ahora mismo en disposicion de llevarse cada premio. Como el
+       premio pasa al mejor de los 22 que aportaron, aqui se busca al primero
+       de la lista que este entre ellos, y se avisa si el lider real se ha
+       quedado fuera del bote.
+
+       El campeon y el subcampeon no existen hasta que se juegue la final, asi
        que hasta entonces se dice eso y no se inventa un nombre. */
     function situacion(puesto) {
-      var clave = puesto.toLowerCase();
-      if (clave.indexOf("mvp") >= 0) {
-        var lider = (D.mvp && D.mvp.tabla || []).filter(function (f) {
-          return f.total > 0;
-        })[0];
-        if (!lider) return "Aún sin clasificación";
-        return marca(lider.participante, "va primero");
+      if (puesto.toLowerCase().indexOf("mvp") < 0) {
+        return D.eliminatorias ? "" : "Se decide en la eliminatoria";
       }
-      if (!D.eliminatorias) return "Se decide en la eliminatoria";
-      return "";
-    }
+      var tabla = (D.mvp && D.mvp.tabla || []).filter(function (f) {
+        return f.total > 0;
+      });
+      if (!tabla.length) return "Aún sin clasificación";
 
-    function marca(id, cola) {
-      return (aportan[id] ? "" : '<b class="fuera">No aportó · </b>') +
-        esc(nombre(id)) + " " + cola;
+      var cobra = tabla.filter(function (f) { return aportan[f.participante]; })[0];
+      if (!cobra) return "Nadie del bote puntúa todavía";
+      if (tabla[0].participante === cobra.participante) {
+        return esc(nombre(cobra.participante)) + " va primero";
+      }
+      return esc(nombre(cobra.participante)) + " lo cobraría · " +
+        '<b class="fuera">' + esc(nombre(tabla[0].participante)) +
+        " va primero pero no aportó</b>";
     }
 
     var reparto = p.reparto.map(function (r) {
@@ -402,9 +407,10 @@
       "<h3>Cómo funciona</h3>" +
       "<p>La aportación fue <b>voluntaria</b>, de 10" + m + " por cabeza. " +
       "Quien no puso compite exactamente igual, pero fuera del bote.</p>" +
-      "<p>Si un premio lo gana alguien que <b>no aportó</b>, ese dinero " +
-      "<b>se devuelve</b> a quienes lo pusieron. Solo se cobra si lo gana uno " +
-      "de los " + (p.participantes || []).length + ".</p>" +
+      "<p>Si un premio lo gana alguien que <b>no aportó</b>, ese premio " +
+      "<b>pasa al mejor clasificado de entre los " +
+      (p.participantes || []).length + "</b>. El dinero no se devuelve: " +
+      "siempre se reparte.</p>" +
       "<h3>Quién compite por el dinero</h3>" +
       "<p>" + (p.participantes || []).length + " de los " +
       (D.participantes || []).length + " participantes.</p>" +
