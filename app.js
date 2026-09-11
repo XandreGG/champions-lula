@@ -395,7 +395,8 @@
       "<li>Más puntos con ariete.</li><li>Más jornadas ganadas.</li>" +
       "<li>Campeón fase clasificatoria.</li>" +
       "<li>Más puntos conseguidos en total.</li>" +
-      "<li>Mejor media de posición.</li><li>Más puntos en una jornada.</li></ol>" +
+      "<li>Mejor media de posición.</li>" +
+      "<li>Más puntos en una jornada ganada.</li></ol>" +
       "<p>Empate en el MVP: gana quien siga vivo en la competición y, si los " +
       "dos siguen o los dos están fuera, quien mejor posición tenga en la " +
       "general.</p>" +
