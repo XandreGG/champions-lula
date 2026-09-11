@@ -656,6 +656,19 @@ th.c-ancha, td.c-ancha { min-width: 36px; }
 
 .reparto .pr:first-child b { font-size: 22px; }
 
+/* Cada premio lleva debajo quien lo tendria ahora mismo. */
+.pr { flex-wrap: wrap; }
+
+.pr-sit {
+  flex: 1 0 100%;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--debil);
+  margin-top: 2px;
+}
+
+.pr-sit .fuera { color: var(--zona-fuera); font-weight: 700; }
+
 .premiados {
   display: grid;
   grid-template-columns: 1fr 1fr;

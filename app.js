@@ -360,9 +360,35 @@
     if (!p) return "";
     var m = p.moneda || "€";
 
+    var aportan = {};
+    (p.participantes || []).forEach(function (id) { aportan[id] = true; });
+
+    /* Quien esta ahora mismo en disposicion de llevarse cada premio. El
+       campeon y el subcampeon no existen hasta que se juegue la final, asi
+       que hasta entonces se dice eso y no se inventa un nombre. */
+    function situacion(puesto) {
+      var clave = puesto.toLowerCase();
+      if (clave.indexOf("mvp") >= 0) {
+        var lider = (D.mvp && D.mvp.tabla || []).filter(function (f) {
+          return f.total > 0;
+        })[0];
+        if (!lider) return "Aún sin clasificación";
+        return marca(lider.participante, "va primero");
+      }
+      if (!D.eliminatorias) return "Se decide en la eliminatoria";
+      return "";
+    }
+
+    function marca(id, cola) {
+      return (aportan[id] ? "" : '<b class="fuera">No aportó · </b>') +
+        esc(nombre(id)) + " " + cola;
+    }
+
     var reparto = p.reparto.map(function (r) {
+      var s = situacion(r.puesto);
       return '<div class="pr"><span>' + esc(r.puesto) + "</span><b>" +
-        r.importe + m + "</b></div>";
+        r.importe + m + "</b>" +
+        (s ? '<small class="pr-sit">' + s + "</small>" : "") + "</div>";
     }).join("");
 
     var gente = (p.participantes || []).map(function (id) {
@@ -373,10 +399,15 @@
     return '<div class="bote"><span>Bote total</span><b>' + p.bote + m +
       "</b></div>" +
       '<div class="reparto">' + reparto + "</div>" +
+      "<h3>Cómo funciona</h3>" +
+      "<p>La aportación fue <b>voluntaria</b>, de 10" + m + " por cabeza. " +
+      "Quien no puso compite exactamente igual, pero fuera del bote.</p>" +
+      "<p>Si un premio lo gana alguien que <b>no aportó</b>, ese dinero " +
+      "<b>se devuelve</b> a quienes lo pusieron. Solo se cobra si lo gana uno " +
+      "de los " + (p.participantes || []).length + ".</p>" +
       "<h3>Quién compite por el dinero</h3>" +
       "<p>" + (p.participantes || []).length + " de los " +
-      (D.participantes || []).length + " participantes. El resto juega " +
-      "la competición igual, pero fuera del bote.</p>" +
+      (D.participantes || []).length + " participantes.</p>" +
       '<div class="premiados">' + gente + "</div>";
   }
 
