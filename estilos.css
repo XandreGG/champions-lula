@@ -554,6 +554,130 @@ th.c-ancha, td.c-ancha { min-width: 36px; }
 
 /* ------------------------------------------------------------------ info */
 
+/* Bloques plegables. <details> nativo: la flecha es nuestra, la del navegador
+   se oculta, y el estado se mantiene al abrir y cerrar. */
+.bloque {
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.bloque > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 13px 16px;
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--dorado);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.bloque > summary::-webkit-details-marker { display: none; }
+
+.bloque > summary::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--tenue);
+  border-bottom: 2px solid var(--tenue);
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform .18s ease;
+}
+
+.bloque[open] > summary::after { transform: rotate(-135deg) translate(-2px, -2px); }
+.bloque[open] > summary { border-bottom: 1px solid var(--borde); }
+.bloque > summary:hover { background: rgba(140, 150, 255, .06); }
+
+/* ------------------------------------------------------------- premios */
+
+.bote {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(246, 201, 72, .35);
+  border-radius: var(--radio-sm);
+  background: rgba(246, 201, 72, .08);
+  margin-bottom: 10px;
+}
+
+.bote span {
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--dorado-sua);
+}
+
+.bote b {
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--dorado);
+}
+
+.reparto { display: grid; gap: 6px; }
+
+.pr {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 14px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  background: var(--panel-2);
+}
+
+.pr span {
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 12.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--texto);
+}
+
+.pr b {
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--dorado);
+}
+
+.reparto .pr:first-child b { font-size: 22px; }
+
+.premiados {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 10px;
+  margin-top: 4px;
+}
+
+.pg { display: flex; align-items: center; gap: 7px; min-width: 0; }
+
+.pg span {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #CBD8EF;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 560px) {
+  .premiados { grid-template-columns: repeat(3, 1fr); }
+}
+
 .info { padding: 14px 16px; }
 .info h3 { font-size: 13.5px; color: var(--dorado); margin: 18px 0 8px; }
 .info h3:first-child { margin-top: 0; }

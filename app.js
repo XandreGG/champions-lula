@@ -347,72 +347,119 @@
 
   // ----------------------------------------------------------------- info
 
+  /* Un bloque plegable. Se usa <details> nativo: sin JavaScript, accesible
+     desde el teclado y sin que se pierda al repintar la seccion. */
+  function bloque(titulo, contenido, abierto) {
+    return '<details class="bloque"' + (abierto ? " open" : "") + ">" +
+      "<summary>" + esc(titulo) + "</summary>" +
+      '<div class="info">' + contenido + "</div></details>";
+  }
+
+  function premiosHTML() {
+    var p = D.premios;
+    if (!p) return "";
+    var m = p.moneda || "€";
+
+    var reparto = p.reparto.map(function (r) {
+      return '<div class="pr"><span>' + esc(r.puesto) + "</span><b>" +
+        r.importe + m + "</b></div>";
+    }).join("");
+
+    var gente = (p.participantes || []).map(function (id) {
+      return '<div class="pg">' + escudo(id) + "<span>" +
+        esc(nombre(id)) + "</span></div>";
+    }).join("");
+
+    return '<div class="bote"><span>Bote total</span><b>' + p.bote + m +
+      "</b></div>" +
+      '<div class="reparto">' + reparto + "</div>" +
+      "<h3>Quién compite por el dinero</h3>" +
+      "<p>" + (p.participantes || []).length + " de los " +
+      (D.participantes || []).length + " participantes. El resto juega " +
+      "la competición igual, pero fuera del bote.</p>" +
+      '<div class="premiados">' + gente + "</div>";
+  }
+
   function pintaInfo() {
-    return titulo("Reglas de la Champions Lula", D.edicion) +
-      '<div class="tarjeta"><div class="info">' +
-      '<p class="nota" style="margin:0 0 14px">' + esc(D.edicion) +
-      (D.actualizado ? " · actualizado el " + esc(D.actualizado) : "") +
-      "</p>" +
-      "<p>Formato Biwenger sin mercado: gana quien mejor alineación haga cada " +
-      "jornada. Somos <span class='destacado'>36 participantes</span>, tantos " +
-      "como en la Champions.</p>" +
+    return titulo("Información", D.edicion) +
+      (D.actualizado
+        ? '<p class="nota">Datos actualizados el ' + esc(D.actualizado) +
+          ".</p>"
+        : "") +
 
-      "<h3>1. Fase clasificatoria</h3>" +
-      "<p>De la jornada 1 a la 8.</p><ul>" +
-      "<li>Del 1º al 8º: clasifican a octavos.</li>" +
-      "<li>Del 9º al 24º: disputan el play-off.</li>" +
-      "<li>Del 25º al 36º: quedan eliminados.</li></ul>" +
+      bloque("Premios", premiosHTML(), true) +
 
-      "<h3>2. Fase eliminatoria</h3>" +
-      "<p>Enfrentamientos directos a ida y vuelta. El emparejamiento depende " +
-      "de la posición en la fase clasificatoria.</p>" +
+      bloque("Formato de la competición",
+        "<p>Formato Biwenger sin mercado: gana quien mejor alineación haga " +
+        "cada jornada. Somos <span class='destacado'>36 participantes</span>, " +
+        "tantos como en la Champions.</p>" +
+        "<h3>1. Fase clasificatoria</h3>" +
+        "<p>De la jornada 1 a la 8.</p><ul>" +
+        "<li>Del 1º al 8º: clasifican a octavos.</li>" +
+        "<li>Del 9º al 24º: disputan el play-off.</li>" +
+        "<li>Del 25º al 36º: quedan eliminados.</li></ul>" +
+        "<h3>2. Fase eliminatoria</h3>" +
+        "<p>Enfrentamientos directos a ida y vuelta. El emparejamiento " +
+        "depende de la posición en la fase clasificatoria.</p>") +
 
-      "<h3>Empate en la clasificación general</h3><ol>" +
-      "<li>Más jornadas ganadas.</li><li>Mejor media de posición.</li>" +
-      "<li>Más puntos de ariete.</li><li>Más goles.</li>" +
-      "<li>Más asistencias.</li></ol>" +
-      "<p>Si el empate se mantiene, se comparan el resto de estadísticas del " +
-      "Biwenger.</p>" +
+      bloque("Normas de la liga",
+        "<ol>" +
+        "<li><span class='destacado'>Existe el ariete</span>: suma +3 puntos " +
+        "si marca gol.</li>" +
+        "<li><span class='destacado'>Existe un cambio</span> durante la " +
+        "jornada.</li>" +
+        "<li>No existe restricción de dinero.</li>" +
+        "<li>No existe el capitán.</li>" +
+        "<li>No existen suplentes.</li>" +
+        "<li>No existe entrenador.</li>" +
+        "<li><span class='destacado'>Expulsión por inactividad</span>: 3 " +
+        "jornadas seguidas sin alinear.</li></ol>") +
 
-      "<h3>Empate en una jornada</h3><ol>" +
-      "<li>Más puntos de ariete.</li><li>Más goles.</li>" +
-      "<li>Más asistencias.</li>" +
-      "<li>Mejor posición en la general antes de la jornada.</li></ol>" +
+      bloque("Cómo se deshacen los empates",
+        "<p>En las clasificaciones, la estadística marcada en " +
+        "<b class='oro'>dorado</b> es la que separa a cada participante del " +
+        "siguiente.</p>" +
+        "<h3>En la clasificación general</h3><ol>" +
+        "<li>Más jornadas ganadas.</li><li>Mejor media de posición.</li>" +
+        "<li>Más puntos de ariete.</li><li>Más goles.</li>" +
+        "<li>Más asistencias.</li></ol>" +
+        "<p>Si el empate se mantiene, se comparan el resto de estadísticas " +
+        "del Biwenger.</p>" +
+        "<h3>En una jornada</h3><ol>" +
+        "<li>Más puntos de ariete.</li><li>Más goles.</li>" +
+        "<li>Más asistencias.</li>" +
+        "<li>Mejor posición en la general antes de la jornada.</li></ol>" +
+        "<p>Si dos participantes empatan en todo, <b>comparten posición</b> y " +
+        "la siguiente salta: 15º, 15º y 17º.</p>" +
+        "<h3>En una eliminatoria</h3><ol>" +
+        "<li>Más goles en la eliminatoria.</li>" +
+        "<li>Mejor posición en la fase clasificatoria.</li></ol>") +
 
-      "<h3>Empate en una eliminatoria</h3><ol>" +
-      "<li>Más goles en la eliminatoria.</li>" +
-      "<li>Mejor posición en la fase clasificatoria.</li></ol>" +
+      bloque("El MVP",
+        "<p>Aunque quedes eliminado sigues compitiendo por este premio. Se " +
+        "reparte en ocho apartados; en cada uno puntúan los tres primeros con " +
+        "<span class='destacado'>1,00 / 0,50 / 0,25</span>. Máximo: 8,00.</p>" +
+        "<ol>" +
+        "<li>Más goles conseguidos.</li><li>Más asistencias conseguidas.</li>" +
+        "<li>Más puntos con ariete.</li><li>Más jornadas ganadas.</li>" +
+        "<li>Campeón fase clasificatoria.</li>" +
+        "<li>Más puntos conseguidos en total.</li>" +
+        "<li>Mejor media de posición.</li>" +
+        "<li>Más puntos en una jornada ganada.</li></ol>" +
+        "<p>Empate en el MVP: gana quien siga vivo en la competición y, si " +
+        "los dos siguen o los dos están fuera, quien mejor posición tenga en " +
+        "la general.</p>") +
 
-      "<h3>Normas de la liga</h3><ol>" +
-      "<li><span class='destacado'>Existe el ariete</span>: suma +3 puntos si " +
-      "marca gol.</li>" +
-      "<li><span class='destacado'>Existe un cambio</span> durante la jornada.</li>" +
-      "<li>No existe restricción de dinero.</li><li>No existe el capitán.</li>" +
-      "<li>No existen suplentes.</li><li>No existe entrenador.</li>" +
-      "<li><span class='destacado'>Expulsión por inactividad</span>: 3 jornadas " +
-      "seguidas sin alinear.</li></ol>" +
-
-      "<h3>MVP</h3>" +
-      "<p>Aunque quedes eliminado sigues compitiendo por este premio. Se " +
-      "reparte en ocho apartados; en cada uno puntúan los tres primeros con " +
-      "<span class='destacado'>1,00 / 0,50 / 0,25</span>. Máximo: 8,00.</p><ol>" +
-      "<li>Más goles conseguidos.</li><li>Más asistencias conseguidas.</li>" +
-      "<li>Más puntos con ariete.</li><li>Más jornadas ganadas.</li>" +
-      "<li>Campeón fase clasificatoria.</li>" +
-      "<li>Más puntos conseguidos en total.</li>" +
-      "<li>Mejor media de posición.</li>" +
-      "<li>Más puntos en una jornada ganada.</li></ol>" +
-      "<p>Empate en el MVP: gana quien siga vivo en la competición y, si los " +
-      "dos siguen o los dos están fuera, quien mejor posición tenga en la " +
-      "general.</p>" +
-
-      "<h3>Qué significa cada columna</h3><ul>" +
-      "<li><b>PT</b> puntos totales · <b>PTS</b> puntos de la jornada.</li>" +
-      "<li><b>JG</b> jornadas ganadas.</li>" +
-      "<li><b>MED</b> media de posición por jornada; cuanto menor, mejor.</li>" +
-      "<li><b>ARI</b> puntos de ariete acumulados, a +3 por jornada acertada.</li>" +
-      "<li><b>GF</b> goles · <b>AS</b> asistencias.</li></ul>" +
-      "</div></div>";
+      bloque("Qué significa cada columna",
+        "<ul>" +
+        "<li><b>PT</b> puntos totales · <b>PTS</b> puntos de la jornada.</li>" +
+        "<li><b>JG</b> jornadas ganadas.</li>" +
+        "<li><b>MED</b> media de posición por jornada; cuanto menor, mejor.</li>" +
+        "<li><b>ARI</b> puntos de ariete acumulados, a +3 por jornada " +
+        "acertada.</li>" +
+        "<li><b>GF</b> goles · <b>AS</b> asistencias.</li>" +
+        "<li><b>+/−</b> puestos ganados o perdidos en la última jornada.</li>" +
+        "</ul>");
   }
 
   // ------------------------------------------------------------- armazón
