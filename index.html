@@ -39,7 +39,29 @@
   <p id="pie-txt">Champions Lula</p>
 </footer>
 
-<script src="datos.js"></script>
-<script src="app.js"></script>
+<script>
+/* Los datos se piden con una marca de tiempo para saltarse la caché.
+   Sin esto, GitHub sirve el archivo con max-age=600 y los participantes
+   seguirían viendo la clasificación anterior durante al menos diez minutos
+   después de que el administrador publicara la nueva. */
+(function () {
+  var t = Date.now();
+
+  function cargar(src, siguiente) {
+    var s = document.createElement("script");
+    s.src = src + "?t=" + t;
+    s.onload = siguiente;
+    s.onerror = function () {
+      document.getElementById("vista").innerHTML =
+        '<div class="tarjeta"><div class="vacio"><strong>No he podido ' +
+        "cargar los datos</strong>Comprueba que tienes conexión y vuelve a " +
+        "intentarlo.</div></div>";
+    };
+    document.body.appendChild(s);
+  }
+
+  cargar("datos.js", function () { cargar("app.js"); });
+})();
+</script>
 </body>
 </html>
