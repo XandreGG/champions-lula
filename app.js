@@ -582,4 +582,30 @@
 
   if (PINTORES[location.hash.slice(1)]) actual = location.hash.slice(1);
   pintar();
+
+  /* Al volver a la pagina (pestaña que estaba abierta de antes, app guardada
+     en la pantalla de inicio, movil que se desbloquea) se comprueba si el
+     administrador ha publicado algo nuevo. Sin esto, quien dejara la web
+     abierta seguiria viendo la jornada anterior indefinidamente. */
+  var ultimaComprobacion = Date.now();
+
+  function buscarNovedades() {
+    if (document.hidden) return;
+    if (Date.now() - ultimaComprobacion < 30000) return;
+    ultimaComprobacion = Date.now();
+
+    fetch("datos.js?t=" + Date.now(), { cache: "no-store" })
+      .then(function (r) { return r.text(); })
+      .then(function (txt) {
+        var m = txt.match(/"actualizado":"([^"]*)"/);
+        if (m && D.actualizado && m[1] !== D.actualizado) location.reload();
+      })
+      .catch(function () { /* sin conexion: se deja como esta */ });
+  }
+
+  document.addEventListener("visibilitychange", buscarNovedades);
+  window.addEventListener("focus", buscarNovedades);
+  window.addEventListener("pageshow", function (ev) {
+    if (ev.persisted) buscarNovedades();
+  });
 })();
