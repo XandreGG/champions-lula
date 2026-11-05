@@ -218,10 +218,10 @@
       return titulo("MVP Champions Lula") +
         vacio("El MVP arranca con la primera jornada",
           "Se reparten 1,00 al primero, 0,50 al segundo y 0,25 al tercero " +
-          "de cada uno de los ocho apartados. Máximo: 8,00 puntos.");
+          "de cada uno de los ocho apartados. Máximo: 8,75 puntos.");
     }
     var top = mvp.tabla.filter(function (f) { return f.total > 0; });
-    return titulo("MVP Champions Lula", "máximo 8,00",
+    return titulo("MVP Champions Lula", "máximo 8,75",
       "Se sigue sumando aunque estés eliminado. Empate: gana quien siga vivo " +
       "en la competición y, si no, quien mejor vaya en la general.") +
       podioHTML(top.slice(0, 3), function (f) { return f.total.toFixed(2); }) +
@@ -320,7 +320,7 @@
       '<p class="nota">Los 36 equipos, con todas las estadísticas, en la ' +
       'pestaña <b>General</b>.</p>' +
 
-      (mvp.length ? titulo("MVP", "máximo 8,00") +
+      (mvp.length ? titulo("MVP", "máximo 8,75") +
         podioHTML(mvp.slice(0, 3), function (f) { return f.total.toFixed(2); })
         : "") +
 
@@ -502,7 +502,12 @@
       bloque("El MVP",
         "<p>Aunque quedes eliminado sigues compitiendo por este premio. Se " +
         "reparte en ocho apartados; en cada uno puntúan los tres primeros con " +
-        "<span class='destacado'>1,00 / 0,50 / 0,25</span>. Máximo: 8,00.</p>" +
+        "<span class='destacado'>1,00 / 0,50 / 0,25</span>.</p>" +
+        "<p>El máximo que puede sumar una persona es <b>8,75</b>: 1,00 en " +
+        "cada uno de los ocho apartados, más el 0,50 y el 0,25 extra que " +
+        "puede arañar en <i>más puntos en una jornada ganada</i>, donde cada " +
+        "victoria compite por separado y se pueden ocupar varios puestos del " +
+        "podio.</p>" +
         "<ol>" +
         "<li>Más goles conseguidos.</li><li>Más asistencias conseguidas.</li>" +
         "<li>Más puntos con ariete.</li><li>Más jornadas ganadas.</li>" +
